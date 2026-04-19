@@ -8,9 +8,12 @@ import time, json
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
-templates = Jinja2Templates(directory=".")
+import os
 
-app.mount("/static", StaticFiles(directory="."), name="static")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+templates = Jinja2Templates(directory=BASE_DIR)
+app.mount("/static", StaticFiles(directory=BASE_DIR), name="static")
 
 # INDEX PAGE
 @app.get("/", response_class=HTMLResponse)
