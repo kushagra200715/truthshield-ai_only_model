@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scanner</title>
+
+  <!-- ✅ FIXED -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="container nav">
+    <div class="logo">🛡 TruthShieldAI</div>
+
+    <div class="links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/">Home</a>
+    </div>
+  </div>
+</nav>
+
+<section class="page">
+  <h1>Scan Content</h1>
+
+  <div class="card scanner-box">
+    <!-- ✅ ID add kiya -->
+    <textarea id="messageInput" placeholder="Paste message"></textarea>
+
+    <!-- ✅ onclick add kiya -->
+    <button onclick="analyzeMessage()" class="btn primary full">
+      Analyze
+    </button>
+  </div>
+
+  <div class="card result-box">
+    <h3>Result</h3>
+
+    <!-- ✅ dynamic result -->
+    <p id="resultText">Authenticity Score: -</p>
+  </div>
+</section>
+
+<script>
+async function analyzeMessage() {
+
+  const text = document.getElementById("messageInput").value;
+
+  if (!text.trim()) {
+    alert("Bhai message daal pehle 😑");
+    return;
+  }
+
+  try {
+    const res = await fetch("/check-message", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ text: text })
+    });
+
+    const data = await res.json();
+
+    // ✅ result show
+    document.getElementById("resultText").innerHTML =
+      "Scam Score: " + data.scam_score + "<br>" +
+      "Result: <b style='color:" + (data.result === "SCAM" ? "red" : "lightgreen") + "'>" 
+      + data.result + "</b>";
+
+  } catch (err) {
+    console.error(err);
+    alert("Backend error aa gaya bhai 😭");
+  }
+}
+</script>
+
+</body>
+</html>
